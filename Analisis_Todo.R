@@ -29,7 +29,7 @@ names(Tabla1) <- c("DEPARTAMENTO", "LEMA", "value")
 Tabla2 <- reshape::melt(Tabla2)
 Resultados <- bind_rows(Tabla1, Tabla2)
 
-Resultados <- reshape::cast(Resultados, formula = DEPARTAMENTO~...)
+ResultadosINT <- reshape::cast(Resultados, formula = DEPARTAMENTO~...)
 
 # Resultados Frente Amplio por departamento
 DatosFA <- Datos3[Datos3$LEMA == "Frente Amplio",]
@@ -66,10 +66,9 @@ names(Tabla1b) <- c("Departamento", "Lema", "value") # Asignar mismos nombres a 
 
 Tabla <- rbind(Tabla1, Tabla1b) # Combinar ambas talas
 Tabla <- reshape::cast(Tabla, ... ~ Lema) # Reformatear para que quede la salida deseada
-Tabla2 <- dplyr::bind_rows(Tabla, colSums(Tabla), .id=NULL)
-names(Tabla)
+TablaNAC1 <- dplyr::bind_rows(Tabla, colSums(Tabla), .id=NULL) # Resultados generales
 
-##### Se quiere obtener una tabla de votos por sublema #####
+### Se quiere obtener una tabla de votos por sublema
 
 # Crear una base con hojas por sublema
 Sublemas <- rio::import(here::here("integracion-de-hojas.xlsx"))
@@ -144,33 +143,44 @@ VotosSublemas <- dplyr::bind_rows(Frente2, PNacional2, PColorado2)
 BaseP <- rio::import(here::here("PLEBISCITO.xlsx"))
 
 DatosP <- BaseP[, c(3,7,10,11,12,13,14)]
-names(BaseP)
-
-
-
-
+VotosSI <- DatosP$SOLO_POR_SI+DatosP$`Papeleta por SI` # Suma votos con la papeleta y votos solo por la reforma
+DatosP <- cbind(DatosP, VotosSI)
+names(DatosP)
+TablaSI <- cbind("Habilitados" = xtabs(HABILITADO~ DEPTO, DatosP),
+                 "Emitidos" = xtabs(T_EMITIDOS~ DEPTO, DatosP),
+                 "Blanco" = xtabs(EN_BLANCO~ DEPTO, DatosP),
+                 "Anulados" = xtabs(ANULADOS~ DEPTO, DatosP),
+                 "VotosSI" = xtabs(VotosSI~ DEPTO, DatosP))
 
 
 
 ########################         BALOTAJE       ##############################
 
 
-
-
-
-
-
-
-
-
-
-
-
+BaseB <- rio::import(here::here("balotaje-2019.xlsx"))
+DatosB <- BaseB
+names(DatosB)
+TablaBalotaje <- cbind("Martínez-Villar" = xtabs(Total_Martinez_Villar ~ Departamento, DatosB),
+                       "Lacalle-Argimón" = xtabs(Total_Lacalle_Pou_Argimon ~ Departamento, DatosB),
+                       "Hablitados" = xtabs(Total_Habilitados ~ Departamento, DatosB),
+                       "Emitidos" = xtabs(Total_Votos_Emitidos ~ Departamento, DatosB),
+                       "Blanco" = xtabs(Total_EN_Blanco ~ Departamento, DatosB),
+                       "Anulado" = xtabs(Total_Anulados ~ Departamento, DatosB))
 
 
 
 
 library(xlsx)
-write.xlsx(Tabla2, file="Resultados.xlsx", sheetName="Nacional-Total", row.names=FALSE)
-write.xlsx(VotosSublemas, file="Resultados.xlsx", sheetName="Sublemas-Total", append=TRUE, row.names=FALSE)
+write.xlsx(ResultadosINT, file="Resultados.xlsx", sheetName="Internas-General", row.names=FALSE)
+write.xlsx(TablaFA, file="Resultados.xlsx", sheetName="Internas-FA", append=TRUE, row.names=FALSE)
+write.xlsx(TablaPN, file="Resultados.xlsx", sheetName="Internas-PN", append=TRUE, row.names=FALSE)
+write.xlsx(TablaPC, file="Resultados.xlsx", sheetName="Internas-PC", append=TRUE, row.names=FALSE)
+write.xlsx(TablaNAC1, file="Resultados.xlsx", sheetName="Nacional-General", append=TRUE, row.names=FALSE)
+write.xlsx(Frente2, file="Resultados.xlsx", sheetName="Nacional-FA", append=TRUE, row.names=FALSE)
+write.xlsx(PNacional2, file="Resultados.xlsx", sheetName="Nacional-PN", append=TRUE, row.names=FALSE)
+write.xlsx(PColorado2, file="Resultados.xlsx", sheetName="Nacional-PC", append=TRUE, row.names=FALSE)
+write.xlsx(VotosSublemas, file="Resultados.xlsx", sheetName="Nacional-SUBLEMAS", append=TRUE, row.names=FALSE)
+write.xlsx(TablaSI, file="Resultados.xlsx", sheetName="Reforma", append=TRUE, row.names=FALSE)
+write.xlsx(TablaBalotaje, file="Resultados.xlsx", sheetName="Balotaje", append=TRUE, row.names=FALSE)
+
 
