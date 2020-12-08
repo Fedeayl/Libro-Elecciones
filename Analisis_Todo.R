@@ -21,7 +21,8 @@ Tabla1 <- cbind(Habilitados = xtabs(Total_Habilitados ~ Departamento, Datos2),
                 Blanco = xtabs(Total_En_Blanco ~ Departamento, Datos2)) # Crea la base general de habilitados, blancos, etc
 
 Base3 <- rio::import(here::here("Interna desglose-de-votos.xlsx"))
-Datos3 <- Base3[,c(2,5,6,8)]
+Datos3 <- Base3[,c(1,2,5,6,8)]
+Datos3 <- Datos3[Datos3$TIPO_REGISTRO == "HOJA_ODN",]
 Tabla2 <- xtabs(CANTIDAD_VOTOS ~ DEPARTAMENTO + LEMA, Datos3) # Tabla de votos por lema por departamento
 
 Tabla1 <- reshape::melt(Tabla1)
@@ -171,7 +172,7 @@ TablaBalotaje <- cbind("Martínez-Villar" = xtabs(Total_Martinez_Villar ~ Depart
 
 
 library(xlsx)
-write.xlsx(ResultadosINT, file="Resultados.xlsx", sheetName="Internas-General", row.names=FALSE)
+write.xlsx(ResultadosINT, file="Resultados.xlsx", sheetName="Internas-General2",row.names=FALSE)
 write.xlsx(TablaFA, file="Resultados.xlsx", sheetName="Internas-FA", append=TRUE, row.names=FALSE)
 write.xlsx(TablaPN, file="Resultados.xlsx", sheetName="Internas-PN", append=TRUE, row.names=FALSE)
 write.xlsx(TablaPC, file="Resultados.xlsx", sheetName="Internas-PC", append=TRUE, row.names=FALSE)
