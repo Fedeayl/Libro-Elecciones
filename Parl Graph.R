@@ -62,8 +62,12 @@ DIPplot <- ggplot(RepresentantesUy, aes(x, y, colour = party_long)) +
         geom_parliament_bar(colour = colour, party = party_long, label = T) + 
         theme_ggparliament(legend = T) +
         scale_colour_manual(values = RepresentantesUy$colour,
-                            limits = RepresentantesUy$party_long)
-
+                            limits = RepresentantesUy$party_long)+
+        geom_highlight_government(goverment == 1, colour = "black", size = 7)+
+        draw_majoritythreshold(n = 50, label = F, type = 'semicircle')+
+        theme(legend.position = 'bottom') +
+        labs(colour = NULL, title = "Cámara de Representantes", 
+             subtitle = "Coalición de gobierno circulada en negro")
 
 
 SENplot 
