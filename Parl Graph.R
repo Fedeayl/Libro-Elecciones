@@ -27,7 +27,7 @@ Representantes <- as.data.frame(cbind(Year = "2019",
 
 RepresentantesUy <- parliament_data(election_data = Representantes,
                             type = "semicircle",
-                            parl_rows = 3,
+                            parl_rows = 5,
                             party_seats = as.numeric(Representantes$seats))
 
 
