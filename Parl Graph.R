@@ -12,7 +12,7 @@ Partidos <- c("Frente Amplio", "Partido Nacional", "Partido Colorado", "Cabildo 
 Senadores <- c(13, 10, 4, 3)
 Diputados <- c(42, 30, 13, 11, 1, 1, 1)
 
-Dip_palette <- gray.colors(length(Diputados), start = 0.3, end = 0.9, gamma = 2.2)
+Dip_palette <- gray.colors(length(Diputados), start = 0, end = 1, gamma=1)
 Sen_palette <- gray.colors(length(Senadores), start = 0.3, end = 0.9, gamma = 2.2)
 
 Representantes <- as.data.frame(cbind(Year = "2019",
@@ -48,12 +48,18 @@ SenadoUy <- parliament_data(election_data = Senado,
 
 
 SENplot <- ggplot(SenadoUy, aes(x, y, colour = party_long)) +
-        geom_parliament_seats(size = 12) + 
+        geom_parliament_seats(size = 16) + 
         # add bar showing proportion of seats by party in legislature
-        geom_parliament_bar(colour = colour, party = party_long, label = T) + 
+        geom_parliament_bar(colour = colour, party = party_long, label = T) +
         theme_ggparliament(legend = T) +
         scale_colour_manual(values = SenadoUy$colour,
-                            limits = SenadoUy$party_long)
+                            limits = SenadoUy$party_long)+
+        geom_highlight_government(goverment == 1, colour = "black", size = 16) +
+        draw_majoritythreshold(n = 15, label = F, type = 'semicircle')+
+        theme(plot.title = element_text(hjust = 0.5))+
+        theme(legend.position = 'bottom') +
+        labs(colour = NULL, title = "Cámara de Senadores", 
+             subtitle = "Coalición de gobierno circulada en negro")
 
 
 DIPplot <- ggplot(RepresentantesUy, aes(x, y, colour = party_long)) +
@@ -66,11 +72,12 @@ DIPplot <- ggplot(RepresentantesUy, aes(x, y, colour = party_long)) +
         geom_highlight_government(goverment == 1, colour = "black", size = 7)+
         draw_majoritythreshold(n = 50, label = F, type = 'semicircle')+
         theme(legend.position = 'bottom') +
+        theme(plot.title = element_text(hjust = 0.5))+
         labs(colour = NULL, title = "Cámara de Representantes", 
-             subtitle = "Coalición de gobierno circulada en negro")
+             subtitle = "Coalición de gobierno circulada en negro", caption = "center")
 
 
-SENplot 
+SENplot
 DIPplot
 
 
