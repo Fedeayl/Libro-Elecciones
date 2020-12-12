@@ -144,14 +144,18 @@ VotosSublemas <- dplyr::bind_rows(Frente2, PNacional2, PColorado2)
 BaseP <- rio::import(here::here("PLEBISCITO.xlsx"))
 
 DatosP <- BaseP[, c(3,7,10,11,12,13,14)]
-VotosSI <- DatosP$SOLO_POR_SI+DatosP$`Papeleta por SI` # Suma votos con la papeleta y votos solo por la reforma
-DatosP <- cbind(DatosP, VotosSI)
 names(DatosP)
 TablaSI <- cbind("Habilitados" = xtabs(HABILITADO~ DEPTO, DatosP),
                  "Emitidos" = xtabs(T_EMITIDOS~ DEPTO, DatosP),
                  "Blanco" = xtabs(EN_BLANCO~ DEPTO, DatosP),
                  "Anulados" = xtabs(ANULADOS~ DEPTO, DatosP),
-                 "VotosSI" = xtabs(VotosSI~ DEPTO, DatosP))
+                 "Solo SI" = xtabs(SOLO_POR_SI~ DEPTO, DatosP),
+                 "Papeleta" = xtabs(`Papeleta por SI`~ DEPTO, DatosP))
+
+
+
+
+
 
 
 
@@ -167,6 +171,8 @@ TablaBalotaje <- cbind("Martínez-Villar" = xtabs(Total_Martinez_Villar ~ Depart
                        "Emitidos" = xtabs(Total_Votos_Emitidos ~ Departamento, DatosB),
                        "Blanco" = xtabs(Total_EN_Blanco ~ Departamento, DatosB),
                        "Anulado" = xtabs(Total_Anulados ~ Departamento, DatosB))
+
+
 
 
 
