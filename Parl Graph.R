@@ -3,8 +3,9 @@
 
 if("ggparliament" %in% list.files(.libPaths()) == FALSE){
         devtools::install_github("robwhickman/ggparliament")
-        } 
+} 
 
+library(ggplot2)
 library(ggparliament)
 
 
@@ -12,7 +13,7 @@ Partidos <- c("Frente Amplio", "Partido Nacional", "Partido Colorado", "Cabildo 
 Senadores <- c(13, 10, 4, 3)
 Diputados <- c(42, 30, 13, 11, 1, 1, 1)
 
-Dip_palette <- gray.colors(length(Diputados), start = 0, end = 1, gamma=1)
+Dip_palette <- gray.colors(length(Diputados), start = 0.2, end = 0.8, gamma = 2.2, rev = T)
 Sen_palette <- gray.colors(length(Senadores), start = 0.3, end = 0.9, gamma = 2.2)
 
 Representantes <- as.data.frame(cbind(Year = "2019",
@@ -22,7 +23,7 @@ Representantes <- as.data.frame(cbind(Year = "2019",
                               party_short = c("FA", "PN", "PC", "CA", "PI", "PG", "PERI"),
                               seats = Diputados, 
                               goverment = c(0,1,1,1,1,1,0),
-                              colour= Dip_pallete),
+                              colour= Dip_palette),
                         stringsAsFactors = FALSE)
 
 RepresentantesUy <- parliament_data(election_data = Representantes,
@@ -64,8 +65,6 @@ SENplot <- ggplot(SenadoUy, aes(x, y, colour = party_long)) +
 
 DIPplot <- ggplot(RepresentantesUy, aes(x, y, colour = party_long)) +
         geom_parliament_seats(size = 7) + 
-        # add bar showing proportion of seats by party in legislature
-        geom_parliament_bar(colour = colour, party = party_long, label = T) + 
         theme_ggparliament(legend = T) +
         scale_colour_manual(values = RepresentantesUy$colour,
                             limits = RepresentantesUy$party_long)+
@@ -75,6 +74,9 @@ DIPplot <- ggplot(RepresentantesUy, aes(x, y, colour = party_long)) +
         theme(plot.title = element_text(hjust = 0.5))+
         labs(colour = NULL, title = "Cámara de Representantes", 
              subtitle = "Coalición de gobierno circulada en negro", caption = "center")
+
+
+
 
 
 SENplot
