@@ -176,7 +176,6 @@ TablaBalotaje <- cbind("Martínez-Villar" = xtabs(Total_Martinez_Villar ~ Depart
 
 
 
-
 library(xlsx)
 write.xlsx(ResultadosINT, file="Resultados.xlsx", sheetName="Internas-General2",row.names=FALSE)
 write.xlsx(TablaFA, file="Resultados.xlsx", sheetName="Internas-FA", append=TRUE, row.names=FALSE)

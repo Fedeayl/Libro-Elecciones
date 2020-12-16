@@ -9,12 +9,13 @@ library(ggplot2)
 library(ggparliament)
 
 
-Partidos <- c("Frente Amplio", "Partido Nacional", "Partido Colorado", "Cabildo Abierto", "Partido Independiente", "Partido de la Gente", "P.E.R.I")
+Partidos <- c("Frente Amplio (42)", "Partido Nacional (30)", "Partido Colorado (13)", "Cabildo Abierto (10)", "Partido Independiente (1)", "Partido de la Gente (1)", "P.E.R.I (1)")
+PartidosS <- c("Frente Amplio (13)", "Partido Nacional (10)", "Partido Colorado (4)", "Cabildo Abierto (3)")
 Senadores <- c(13, 10, 4, 3)
 Diputados <- c(42, 30, 13, 11, 1, 1, 1)
 
-Dip_palette <- gray.colors(length(Diputados), start = 0.2, end = 0.8, gamma = 2.2, rev = T)
-Sen_palette <- gray.colors(length(Senadores), start = 0.3, end = 0.9, gamma = 2.2)
+Dip_palette <- c("gray85", "gray55", "gray75", "gray45", "gray65", "gray35", "gray80" )
+Sen_palette <- c("gray85", "gray55", "gray75", "gray45")
 
 Representantes <- as.data.frame(cbind(Year = "2019",
                               country = "Uruguay",
@@ -35,7 +36,7 @@ RepresentantesUy <- parliament_data(election_data = Representantes,
 Senado <- as.data.frame(cbind(Year = "2019",
                               country = "Uruguay",
                               house = "Senado",
-                              party_long = Partidos[1:length(Senadores)],
+                              party_long = PartidosS[1:length(Senadores)],
                               party_short = c("FA", "PN", "PC", "CA"),
                               seats = Senadores, 
                               goverment = c(0,1,1,1),
@@ -50,8 +51,6 @@ SenadoUy <- parliament_data(election_data = Senado,
 
 SENplot <- ggplot(SenadoUy, aes(x, y, colour = party_long)) +
         geom_parliament_seats(size = 16) + 
-        # add bar showing proportion of seats by party in legislature
-        geom_parliament_bar(colour = colour, party = party_long, label = T) +
         theme_ggparliament(legend = T) +
         scale_colour_manual(values = SenadoUy$colour,
                             limits = SenadoUy$party_long)+
@@ -59,9 +58,9 @@ SENplot <- ggplot(SenadoUy, aes(x, y, colour = party_long)) +
         draw_majoritythreshold(n = 15, label = F, type = 'semicircle')+
         theme(plot.title = element_text(hjust = 0.5))+
         theme(legend.position = 'bottom') +
-        labs(colour = NULL, title = "Cámara de Senadores", 
-             subtitle = "Coalición de gobierno circulada en negro")
-
+        labs(colour = NULL, title = "Integración - Cámara de Senadores - Uruguay 2020",
+            subtitle = "Coalición de gobierno circulada en negro",
+            caption = "Fuente: elaboración propia sobre datos de la Corte Electoral")
 
 DIPplot <- ggplot(RepresentantesUy, aes(x, y, colour = party_long)) +
         geom_parliament_seats(size = 7) + 
@@ -72,15 +71,16 @@ DIPplot <- ggplot(RepresentantesUy, aes(x, y, colour = party_long)) +
         draw_majoritythreshold(n = 50, label = F, type = 'semicircle')+
         theme(legend.position = 'bottom') +
         theme(plot.title = element_text(hjust = 0.5))+
-        labs(colour = NULL, title = "Cámara de Representantes", 
-             subtitle = "Coalición de gobierno circulada en negro", caption = "center")
+        labs(colour = NULL, title = "Integración - Cámara de Representantes - Uruguay 2020",
+             subtitle = "Coalición de gobierno circulada en negro",
+             caption = "Fuente: elaboración propia sobre datos de la Corte Electoral")
 
-
+DIPplot
 
 
 
 SENplot
-DIPplot
+
 
 
 
